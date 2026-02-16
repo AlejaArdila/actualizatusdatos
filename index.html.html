@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verificación de Cuenta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 360px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h2 { color: #d32f2f; margin-bottom: 10px; }
+    p { font-size: 14px; color: #444; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 15px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    button:hover { background: #125aa3; }
+    .mensaje {
+      display: none;
+      color: #2e7d32;
+      font-weight: bold;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .aviso {
+      font-size: 11px;
+      color: gray;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>⚠ Verificación de Seguridad</h2>
+    <p>
+      Detectamos actividad inusual en tu cuenta.  
+      Ingresa tu correo para evitar el bloqueo del servicio.
+    </p>
+
+    <input type="email" id="correo" placeholder="correo@empresa.com" required />
+    <button onclick="guardarCorreo()">Verificar</button>
+
+
+    <div class="mensaje" id="mensaje">
+      ❌ Este fue un simulacro de phishing <br><br>
+      ✅ No caigas en ataques de phishing.  
+      No abras enlaces inusuales ni compartas tus datos.
+    </div>
+
+    <div class="aviso">
+      Ejercicio de concientización en ciberseguridad – No ingreses contraseñas reales
+    </div>
+  </div>
+
+  <!-- Firebase compat SDK (funciona sin servidor local) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCoqFoZBDZiL5sOdE13517X208_ttPkE7c",
+      authDomain: "simulacro-phishing-f9749.firebaseapp.com",
+      projectId: "simulacro-phishing-f9749",
+      storageBucket: "simulacro-phishing-f9749.appspot.com",
+      messagingSenderId: "610917866122",
+      appId: "1:610917866122:web:83b2920f4ce80d10f06b73"
+    };
+
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function guardarCorreo() {
+      const correo = document.getElementById("correo").value;
+
+      if (!correo) {
+        alert("Ingresa un correo válido");
+        return;
+      }
+
+      db.collection("registros_phishing").add({
+        correo: correo,
+        fecha: new Date().toISOString()
+      })
+      .then(() => {
+        document.getElementById("mensaje").style.display = "block";
+        document.getElementById("correo").value = "";
+      })
+      .catch((error) => {
+        console.error("Error guardando correo:", error);
+        alert("Error al guardar el correo. Revisa la consola (F12).");
+      });
+    }
+  </script>
+
+</body>
+</html>
